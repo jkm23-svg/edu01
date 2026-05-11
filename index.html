@@ -42,6 +42,25 @@
         
         .korea-card.selected .detail-text { color: #e0e7ff; }
         .korea-card.selected .effect-box { display: block; }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
@@ -54,7 +73,19 @@
                     <i data-lucide="shield" class="text-yellow-400 w-8 h-8"></i>
                     <h1 class="text-3xl font-bold tracking-tight">독도 역사 논리 탐구</h1>
                 </div>
-                <p class="text-indigo-200 text-lg">사료와 지도로 증명하는 대한민국의 영토 주권</p>
+                <p class="text-indigo-200 text-lg mb-6">사료와 지도로 증명하는 대한민국의 영토 주권</p>
+                
+                <!-- New Media Buttons -->
+                <div class="flex gap-3">
+                    <button onclick="openModal('image')" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full border border-white/20 transition-all text-sm font-semibold">
+                        <i data-lucide="image" class="w-4 h-4 text-yellow-400"></i>
+                        인포그래픽보기
+                    </button>
+                    <button onclick="openModal('video')" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full border border-white/20 transition-all text-sm font-semibold">
+                        <i data-lucide="play-circle" class="w-4 h-4 text-red-400"></i>
+                        동영상보기
+                    </button>
+                </div>
             </div>
             
             <!-- Quick Links -->
@@ -122,23 +153,18 @@
             </div>
         </section>
 
-        <!-- Tab: Names -->
+        <!-- (Other sections names, korea, japan, maps, logic follow the same structure as provided) -->
         <section id="content-names" class="tab-content">
             <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3 mb-6">명칭의 변천사: 기록의 연속성</h2>
-            <div class="grid gap-6" id="names-list">
-                <!-- Names list injected here -->
-            </div>
+            <div class="grid gap-6" id="names-list"></div>
         </section>
 
-        <!-- Tab: Korea -->
         <section id="content-korea" class="tab-content">
             <div class="flex justify-between items-end mb-6">
                 <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3">한국 사료 분석: 영유권의 정당성</h2>
                 <span class="text-xs text-slate-400 italic">사료를 클릭하여 효과를 확인하세요</span>
             </div>
-            <div class="grid md:grid-cols-3 gap-4" id="korea-list">
-                <!-- Korea list injected here -->
-            </div>
+            <div class="grid md:grid-cols-3 gap-4" id="korea-list"></div>
             <div class="bg-indigo-900 text-white p-6 rounded-xl shadow-lg mt-8">
                 <h4 class="font-bold flex items-center gap-2 mb-2 text-yellow-400">
                     <i data-lucide="shield" class="w-5 h-5"></i> So What? Insight
@@ -150,15 +176,11 @@
             </div>
         </section>
 
-        <!-- Tab: Japan -->
         <section id="content-japan" class="tab-content">
             <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3 mb-6">일본 사료 탐구: 스스로 자인한 진실</h2>
-            <div class="space-y-4" id="japan-list">
-                <!-- Japan list injected here -->
-            </div>
+            <div class="space-y-4" id="japan-list"></div>
         </section>
 
-        <!-- Tab: Maps -->
         <section id="content-maps" class="tab-content">
             <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3 mb-6">고지도 분석: 시각적 증거</h2>
             <div class="grid md:grid-cols-2 gap-8">
@@ -168,9 +190,7 @@
                         <span class="absolute text-xs text-slate-400 font-bold">[동국지도 이미지]</span>
                     </div>
                     <h3 class="font-bold text-slate-800 mb-2">한국: 동국지도 (정상기)</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        울릉도 옆에 독도를 정확한 위치에 표기하여 확고한 영토 의식을 반영했습니다.
-                    </p>
+                    <p class="text-sm text-slate-600 leading-relaxed">울릉도 옆에 독도를 정확한 위치에 표기하여 확고한 영토 의식을 반영했습니다.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="h-48 bg-slate-100 rounded-lg mb-4 flex items-center justify-center border border-dashed border-slate-300">
@@ -178,34 +198,18 @@
                         <span class="absolute text-xs text-slate-400 font-bold">[삼국통람도설 이미지]</span>
                     </div>
                     <h3 class="font-bold text-slate-800 mb-2">일본: 삼국통람도설 (삼국총도)</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        독도와 울릉도를 조선과 동일한 색(황색)으로 채색하고 <span class="font-bold text-indigo-600">"조선의 것"</span>이라 명기했습니다.
-                    </p>
+                    <p class="text-sm text-slate-600 leading-relaxed">독도와 울릉도를 조선과 동일한 색(황색)으로 채색하고 <span class="font-bold text-indigo-600">"조선의 것"</span>이라 명기했습니다.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Tab: Logic -->
         <section id="content-logic" class="tab-content">
             <div class="text-center mb-6">
                 <h2 class="text-2xl font-bold text-slate-800">역사적 진실: 논리적 방어벽 구축</h2>
                 <p class="text-slate-500 mt-2">상대방의 억지 주장을 차단하는 강력한 근거들</p>
             </div>
-            
-            <div class="flex justify-center gap-4 mb-10">
-                <a href="./01/index.html" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-bold transition-all shadow-md active:scale-95">
-                    <i data-lucide="calendar" class="w-5 h-5"></i> 독도연표 보러가기
-                </a>
-                <a href="./02/02.html" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-full font-bold transition-all shadow-md active:scale-95">
-                    <i data-lucide="message-square" class="w-5 h-5"></i> 독도용어 사전
-                </a>
-            </div>
-            
-            <div class="grid gap-6" id="logic-list">
-                <!-- Logic items injected here -->
-            </div>
+            <div class="grid gap-6" id="logic-list"></div>
         </section>
-
     </main>
 
     <!-- Footer -->
@@ -215,6 +219,21 @@
             <p class="text-slate-500 text-sm italic">"본 기획안을 통한 교육은 학생들이 사료라는 단단한 토대 위에 논리적 주권 의식을 세우는 기틀이 될 것입니다."</p>
         </div>
     </footer>
+
+    <!-- Modals -->
+    <div id="mediaModal" class="modal" onclick="closeModal(event)">
+        <div class="relative w-full max-w-4xl p-4" onclick="event.stopPropagation()">
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute -top-12 right-0 text-white flex items-center gap-1 hover:text-indigo-300 transition-colors">
+                <i data-lucide="x-circle" class="w-8 h-8"></i>
+            </button>
+            
+            <!-- Content Area -->
+            <div id="modalContent" class="bg-white rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center min-h-[300px]">
+                <!-- Dynamic Content will be injected here -->
+            </div>
+        </div>
+    </div>
 
     <script>
         // --- Data ---
@@ -248,6 +267,35 @@
             ]
         };
 
+        // --- Modal Control ---
+        function openModal(type) {
+            const modal = document.getElementById('mediaModal');
+            const content = document.getElementById('modalContent');
+            
+            if (type === 'image') {
+                content.innerHTML = `<img src="dokdo_info.png" alt="독도 인포그래픽" class="max-w-full max-h-[80vh] object-contain" onerror="this.outerHTML='<div class=p-10>인포그래픽 파일을 찾을 수 없습니다. (dokdo_info.png)</div>'">`;
+            } else if (type === 'video') {
+                content.innerHTML = `
+                    <video controls autoplay class="w-full h-auto max-h-[80vh] bg-black">
+                        <source src="dokdo_mp4_1.mp4" type="video/mp4">
+                        동영상을 지원하지 않는 브라우저입니다.
+                    </video>
+                `;
+            }
+            
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Scroll lock
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('mediaModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('show');
+            content.innerHTML = ''; // Stop video playback
+            document.body.style.overflow = '';
+        }
+
         // --- Tab Logic ---
         const buttons = document.querySelectorAll('.nav-btn');
         const contents = document.querySelectorAll('.tab-content');
@@ -255,12 +303,8 @@
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const target = btn.dataset.tab;
-                
-                // Update buttons
                 buttons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
-                // Update content
                 contents.forEach(c => {
                     c.classList.remove('active');
                     if (c.id === `content-${target}`) c.classList.add('active');
@@ -293,7 +337,7 @@
                 </div>
             `).join('');
 
-            // Render Korea (Interactive)
+            // Render Korea
             document.getElementById('korea-list').innerHTML = data.korea.map((item, idx) => `
                 <div class="korea-card cursor-pointer p-6 rounded-xl border-2 transition-all h-full flex flex-col justify-between bg-white border-slate-200 hover:border-indigo-200" data-idx="${idx}">
                     <div>
@@ -307,7 +351,6 @@
                 </div>
             `).join('');
 
-            // Add Click Event for Korea Cards
             document.querySelectorAll('.korea-card').forEach(card => {
                 card.addEventListener('click', () => {
                     document.querySelectorAll('.korea-card').forEach(c => c.classList.remove('selected'));
@@ -333,7 +376,7 @@
 
             // Render Logic
             document.getElementById('logic-list').innerHTML = data.logic.map(item => `
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-md hover:shadow-lg transition-shadow">
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-md">
                     <div class="flex items-start gap-4">
                         <div class="shrink-0 p-3 bg-slate-100 rounded-full">
                             <i data-lucide="${item.icon}" class="${item.color} w-6 h-6"></i>
@@ -348,11 +391,9 @@
                 </div>
             `).join('');
 
-            // Final: Replace all Lucide icons
             lucide.createIcons();
         }
 
-        // Run init on load
         window.onload = init;
     </script>
 </body>
