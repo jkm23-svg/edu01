@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독도: 우리 땅의 기록과 기억</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            scroll-behavior: smooth;
+            background: #f0f4f8;
+        }
+
+        .ocean-bg {
+            background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dokdo-illustration {
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header Section -->
+    <header class="ocean-bg text-white py-20 px-4 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">독도: 우리 땅의 기록과 기억</h1>
+            <p class="text-xl md:text-2xl opacity-90 mb-8 font-light">가장 먼저 해가 뜨는 곳, 동해의 자존심 독도를 만나보세요.</p>
+            <div class="flex justify-center gap-4">
+                <a href="#explore" class="bg-white text-blue-700 px-8 py-3 rounded-full font-bold hover:bg-blue-50 transition">탐험 시작하기</a>
+            </div>
+        </div>
+        <!-- Decorative Elements -->
+        <div class="absolute bottom-0 left-0 w-full opacity-20">
+            <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ffffff" fill-opacity="1" d="M0,192L48,176C96,160,192,128,288,128C384,128,480,160,576,181.3C672,203,768,213,864,192C960,171,1056,117,1152,101.3C1248,85,1344,107,1392,117.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Interactive Navigation -->
+    <nav id="explore" class="bg-white sticky top-0 shadow-md z-50">
+        <div class="max-w-6xl mx-auto flex items-center justify-between px-4">
+            <!-- Home Button Added Here -->
+            <div class="flex-none">
+                <a href="../index.html" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-bold transition py-4 px-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span>홈</span>
+                </a>
+            </div>
+            
+            <!-- Tab Menu -->
+            <div class="flex flex-wrap justify-center overflow-x-auto whitespace-nowrap">
+                <button onclick="showTab('geo')" class="nav-btn px-4 md:px-6 py-4 font-bold border-b-2 border-transparent hover:text-blue-600 transition active-btn" id="btn-geo">영역 및 지리</button>
+                <button onclick="showTab('history')" class="nav-btn px-4 md:px-6 py-4 font-bold border-b-2 border-transparent hover:text-blue-600 transition" id="btn-history">역사 및 사료</button>
+                <button onclick="showTab('modern')" class="nav-btn px-4 md:px-6 py-4 font-bold border-b-2 border-transparent hover:text-blue-600 transition" id="btn-modern">현대사 및 갈등</button>
+                <button onclick="showTab('guard')" class="nav-btn px-4 md:px-6 py-4 font-bold border-b-2 border-transparent hover:text-blue-600 transition" id="btn-guard">독도 수호</button>
+            </div>
+            
+            <!-- Spacer to balance the layout -->
+            <div class="hidden md:block w-16"></div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        
+        <!-- Section 1: Geography -->
+        <div id="geo" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold text-blue-900 mb-4">국가 영역의 정의</h2>
+                    <p class="text-gray-600 leading-relaxed mb-6">대한민국의 주권이 미치는 지리적 범위는 영토, 영해, 영공으로 구성됩니다. 독도는 이 모든 영역의 핵심적인 기점입니다.</p>
+                </div>
+                <div class="bg-blue-100 p-8 rounded-2xl floating text-center">
+                    <span class="text-5xl mb-4 block">🏝️</span>
+                    <h3 class="text-xl font-bold text-blue-800">동쪽 끝 우리 땅</h3>
+                    <p class="text-blue-600">대한민국의 지리적 상징</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 card-hover">
+                    <h4 class="font-bold text-lg mb-2 text-blue-700">영토 / 영해 / 영공</h4>
+                    <p class="text-sm text-gray-600">국가의 주권이 미치는 지표 범위, 해안선으로부터 12해리(약 22km)의 바다, 그리고 그 수직 상공을 의미합니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 card-hover">
+                    <h4 class="font-bold text-lg mb-2 text-blue-700">배타적 경제수역 (EEZ)</h4>
+                    <p class="text-sm text-gray-600">영해 기선에서 200해리(약 370km)까지의 수역으로, 연안국이 자원의 개발 및 보전에 독점적 권리를 갖습니다.</p>
+                </div>
+                <div class="bg-blue-600 text-white p-6 rounded-xl shadow-lg card-hover">
+                    <h4 class="font-bold text-lg mb-2">가스 하이드레이트</h4>
+                    <p class="text-sm opacity-90">'불타는 얼음'이라 불리는 천연가스와 물의 결합체로, 독도 부근에 대량 매장되어 있는 차세대 고체 에너지원입니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: History -->
+        <div id="history" class="tab-content">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">역사가 증명하는 독도</h2>
+            <div class="space-y-6">
+                <!-- Timeline/Card Style -->
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 bg-white p-6 rounded-xl border-l-4 border-yellow-500 shadow-sm">
+                        <span class="text-xs font-bold text-yellow-600 uppercase tracking-widest">이름으로 보는 역사</span>
+                        <h4 class="text-xl font-bold mt-1 mb-3">명칭의 변천사</h4>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li><strong class="text-gray-800">우산도(于山島):</strong> 조선 시대 사료 속 대표적 이름</li>
+                            <li><strong class="text-gray-800">석도(石島):</strong> '돌섬'의 한자 표기 (대한제국 칙령)</li>
+                            <li><strong class="text-gray-800">가지도(可支島):</strong> 강치(가지어)가 많이 살아 붙여진 이름</li>
+                        </ul>
+                    </div>
+                    <div class="flex-1 bg-white p-6 rounded-xl border-l-4 border-green-500 shadow-sm">
+                        <span class="text-xs font-bold text-green-600 uppercase tracking-widest">문헌적 근거</span>
+                        <h4 class="text-xl font-bold mt-1 mb-3">공식 기록</h4>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li><strong class="text-gray-800">세종실록지리지(1454):</strong> "날씨가 맑으면 서로 바라볼 수 있다"고 기록</li>
+                            <li><strong class="text-gray-800">태정관 지령(1877):</strong> 일본 스스로 "독도는 일본과 관계가 없다"고 명시</li>
+                            <li><strong class="text-gray-800">리앙쿠르 암초:</strong> 1849년 서양에 알려진 명칭</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Modern Issues -->
+        <div id="modern" class="tab-content">
+            <h2 class="text-3xl font-bold text-red-900 mb-8">현대사 및 갈등의 쟁점</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h5 class="font-bold mb-1">SCAPIN 제677호 (1946)</h5>
+                        <p class="text-sm text-gray-600">종전 후 연합군이 일본의 행정 범위에서 독도를 제외시킨 결정적 지령입니다.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg border">
+                        <h5 class="font-bold mb-1">평화선 (이승만 라인, 1952)</h5>
+                        <p class="text-sm text-gray-600">해양 주권 선언을 통해 독도를 대한민국 관할로 명확히 설정한 경계선입니다.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+                        <h5 class="font-bold text-red-800 mb-1">신한일 어업협정 (1998)</h5>
+                        <p class="text-sm text-gray-600">EEZ 제도 도입에 따라 중첩 구역에 '중간수역'을 설정하게 된 협정입니다.</p>
+                    </div>
+                    <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+                        <h5 class="font-bold text-red-800 mb-1">학습지도요령 갈등</h5>
+                        <p class="text-sm text-gray-600">일본 정부가 교육 지침을 통해 부당한 영유권 주장을 가르치도록 의무화하며 갈등이 깊어지고 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Guards -->
+        <div id="guard" class="tab-content">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 mb-4">누가 독도를 지켜왔는가</h2>
+                <p class="text-gray-600">수백 년 전부터 오늘날까지, 독도는 우리 민중과 국가의 수호 의지로 지켜져 왔습니다.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="text-center p-8 bg-white rounded-2xl shadow-sm border-t-8 border-indigo-500">
+                    <div class="text-4xl mb-4">📜</div>
+                    <h4 class="text-xl font-bold mb-2">수토관</h4>
+                    <p class="text-sm text-gray-600">조선 정부가 주변 섬을 관리하고 침입을 막기 위해 3년마다 파견했던 관리들입니다.</p>
+                </div>
+                <div class="text-center p-8 bg-white rounded-2xl shadow-sm border-t-8 border-blue-500">
+                    <div class="text-4xl mb-4">✊</div>
+                    <h4 class="text-xl font-bold mb-2">독도 의용수비대</h4>
+                    <p class="text-sm text-gray-600">1950년대 한국전쟁 중 일본의 침범에 맞서 자발적으로 독도를 지켜낸 울릉도 주민 조직입니다.</p>
+                </div>
+                <div class="text-center p-8 bg-white rounded-2xl shadow-sm border-t-8 border-blue-900">
+                    <div class="text-4xl mb-4">👮</div>
+                    <h4 class="text-xl font-bold mb-2">독도경비대</h4>
+                    <p class="text-sm text-gray-600">1953년 결성되어 지금까지 독도에 상시 주둔하며 우리 영토를 철저히 감시하고 있습니다.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white py-12 px-4 mt-20">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="text-xl font-bold mb-4 italic">"독도는 역사적, 지리적, 국제법적으로 명백한 대한민국의 고유 영토입니다."</p>
+            <div class="w-24 h-1 bg-blue-500 mx-auto my-6"></div>
+            <p class="text-sm text-gray-400">&copy; 독도 교육 인터랙티브 가이드 - 우리 땅 독도를 기억합시다.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Show selected content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update button styles
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('text-blue-600', 'border-blue-600');
+                btn.classList.add('border-transparent');
+            });
+            
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-blue-600', 'border-blue-600');
+            activeBtn.classList.remove('border-transparent');
+            
+            // Scroll adjustment
+            const headerOffset = 100;
+            const elementPosition = document.getElementById('explore').getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - 20;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+
+        // Initial set
+        document.addEventListener('DOMContentLoaded', () => {
+            showTab('geo');
+        });
+    </script>
+</body>
+</html>
