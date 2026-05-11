@@ -1,341 +1,359 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Book, 
-  Map as MapIcon, 
-  Shield, 
-  Search, 
-  ChevronRight, 
-  Info, 
-  FileText, 
-  Globe, 
-  CheckCircle2, 
-  AlertTriangle,
-  History,
-  Calendar,
-  MessageSquare
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>독도 역사 논리 탐구 - 바닐라 JS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            scroll-behavior: smooth;
+        }
 
-const DokdoEduApp = () => {
-  const [activeTab, setActiveTab] = useState('intro');
-  const [selectedSource, setSelectedSource] = useState(null);
+        .tab-content {
+            display: none;
+        }
 
-  const tabs = [
-    { id: 'intro', label: '교육 개요', icon: <Book size={18} /> },
-    { id: 'names', label: '명칭의 변천', icon: <History size={18} /> },
-    { id: 'korea', label: '한국 사료', icon: <FileText size={18} /> },
-    { id: 'japan', label: '일본 사료', icon: <Search size={18} /> },
-    { id: 'maps', label: '고지도 분석', icon: <MapIcon size={18} /> },
-    { id: 'logic', label: '논리적 반박', icon: <Shield size={18} /> },
-  ];
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
 
-  const contents = {
-    intro: {
-      title: "독도 역사 교육 프로그램",
-      subtitle: "객관적 사료와 국제법적 근거를 바탕으로 하는 논리적 주권 내면화",
-      objectives: [
-        "학습자 스스로 일본 측 주장의 모순 발견",
-        "우리 영토 주권의 논리적 파급력 체득",
-        "역사적·지리적·국제법적 '논리적 방어자' 역량 강화"
-      ],
-      strategy: "감성적 호소를 넘어 '팩트'로 압도하는 고도화된 역사 교수 전략"
-    },
-    names: [
-      { category: "한국 사료", names: "우산도, 자산도, 간산도, 천산도, 가지도, 석도, 독도", insight: "필사 과정의 표기 오류는 역설적으로 국가 행정 체계 내에서 지속적으로 관리되었음을 증명함." },
-      { category: "일본 사료", names: "송도(松島), 죽도(竹島), 량고도", insight: "17세기 송도로 인식하다가 1905년 시마네현 편입 시 '죽도'로 공식 채택함 (울릉도와 혼동)." },
-      { category: "서양 기록", names: "리앙쿠르, 올리부차, 다즐레, 아르고노트", insight: "다즐레(울릉도)와 아르고노트의 혼동은 당시 서양 지리 인식의 한계를 보여줌." }
-    ],
-    korea: [
-      { title: "세종실록지리지 (1454)", detail: "우산(독도)과 무릉(울릉도) 두 섬이 날씨가 맑으면 서로 바라볼 수 있다.", effect: "지리적 인지 및 행정 구역(울진현) 포함 증명" },
-      { title: "만기요람 (1808)", detail: "우산은 왜인들이 말하는 송도(Matsushima)다.", effect: "일본 측 명칭과의 대응 관계를 국가 차원에서 파악" },
-      { title: "대한제국 칙령 제41호 (1900)", detail: "울도군의 관할 구역을 '울릉전도와 죽도, 석도'로 확정.", effect: "국제법적으로 완결된 주권 행사 행위 (관보 게재)" }
-    ],
-    japan: [
-      { title: "은주시청합기 (1667)", detail: "일본의 서북쪽 경계를 오키섬으로 한정.", insight: "독도와 울릉도는 조선의 땅임을 스스로 자인" },
-      { title: "조선국 교제시말 내탐서 (1870)", detail: "외무성 관료들이 독도/울릉도가 조선 영토가 된 경위 보고.", insight: "메이지 정부 초기에도 조선 영토로 인식" },
-      { title: "태정관 지령 (1877)", detail: "본방(일본)은 관계가 없다는 것을 명심할 것.", insight: "일본 최고 국가기관의 공식적인 독도 영유권 부인" }
-    ],
-    logic: [
-      { q: "1905년 시마네현 고시는 유효한가?", a: "원천 무효. 1900년 칙령 제41호에 의해 이미 독도는 '유주지'였으므로 무주지 선점론은 성립 불가.", icon: <AlertTriangle className="text-red-500" /> },
-      { q: "대한제국은 왜 즉각 항의하지 못했나?", a: "1905년 을사늑약으로 외교권이 박탈된 상태였기 때문. 그럼에도 내부적으로 지령 제3호를 통해 일본 주장을 엄중 선언함.", icon: <Info className="text-blue-500" /> }
-    ]
-  };
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      {/* Header */}
-      <header className="bg-indigo-900 text-white py-8 px-6 shadow-xl">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Shield className="text-yellow-400" size={32} />
-              <h1 className="text-3xl font-bold tracking-tight">독도 역사 논리 탐구</h1>
+        .nav-btn.active {
+            border-bottom-color: #4f46e5;
+            color: #4f46e5;
+            background-color: rgba(238, 242, 255, 0.5);
+        }
+
+        .korea-card.selected {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+        
+        .korea-card.selected .detail-text { color: #e0e7ff; }
+        .korea-card.selected .effect-box { display: block; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white py-8 px-6 shadow-xl">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <i data-lucide="shield" class="text-yellow-400 w-8 h-8"></i>
+                    <h1 class="text-3xl font-bold tracking-tight">독도 역사 논리 탐구</h1>
+                </div>
+                <p class="text-indigo-200 text-lg">사료와 지도로 증명하는 대한민국의 영토 주권</p>
             </div>
-            <p className="text-indigo-200 text-lg">사료와 지도로 증명하는 대한민국의 영토 주권</p>
-          </div>
-          
-          {/* Quick Links Header Section */}
-          <div className="flex gap-3">
-            <a 
-              href="./01/index.html" 
-              className="flex items-center gap-2 bg-indigo-800 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg border border-indigo-600 transition-colors shadow-sm text-sm font-bold"
-            >
-              <Calendar size={18} className="text-indigo-300" />
-              독도연표
-            </a>
-            <a 
-              href="./02/02.html" 
-              className="flex items-center gap-2 bg-indigo-800 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg border border-indigo-600 transition-colors shadow-sm text-sm font-bold"
-            >
-              <MessageSquare size={18} className="text-indigo-300" />
-              독도용어
-            </a>
-          </div>
+            
+            <!-- Quick Links -->
+            <div class="flex gap-3">
+                <a href="./01/index.html" class="flex items-center gap-2 bg-indigo-800 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg border border-indigo-600 transition-colors shadow-sm text-sm font-bold">
+                    <i data-lucide="calendar" class="text-indigo-300 w-4 h-4"></i>
+                    독도연표
+                </a>
+                <a href="./02/02.html" class="flex items-center gap-2 bg-indigo-800 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg border border-indigo-600 transition-colors shadow-sm text-sm font-bold">
+                    <i data-lucide="message-square" class="text-indigo-300 w-4 h-4"></i>
+                    독도용어
+                </a>
+            </div>
         </div>
-      </header>
+    </header>
 
-      {/* Navigation */}
-      <nav className="sticky top-0 bg-white border-b border-slate-200 z-50 overflow-x-auto">
-        <div className="max-w-6xl mx-auto flex">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => { setActiveTab(tab.id); setSelectedSource(null); }}
-              className={`flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-all whitespace-nowrap border-b-2 ${
-                activeTab === tab.id 
-                ? 'border-indigo-600 text-indigo-600 bg-indigo-50/50' 
-                : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50'
-              }`}
-            >
-              {tab.icon}
-              {tab.label}
+    <!-- Navigation -->
+    <nav class="sticky top-0 bg-white border-b border-slate-200 z-50 overflow-x-auto">
+        <div class="max-w-6xl mx-auto flex" id="tab-buttons">
+            <button data-tab="intro" class="nav-btn active flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-all whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50">
+                <i data-lucide="book" class="w-4 h-4"></i> 교육 개요
             </button>
-          ))}
+            <button data-tab="names" class="nav-btn flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-all whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50">
+                <i data-lucide="history" class="w-4 h-4"></i> 명칭의 변천
+            </button>
+            <button data-tab="korea" class="nav-btn flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-all whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50">
+                <i data-lucide="file-text" class="w-4 h-4"></i> 한국 사료
+            </button>
+            <button data-tab="japan" class="nav-btn flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-all whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50">
+                <i data-lucide="search" class="w-4 h-4"></i> 일본 사료
+            </button>
+            <button data-tab="maps" class="nav-btn flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-all whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50">
+                <i data-lucide="map" class="w-4 h-4"></i> 고지도 분석
+            </button>
+            <button data-tab="logic" class="nav-btn flex items-center gap-2 px-6 py-4 text-sm font-semibold transition-all whitespace-nowrap border-b-2 border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50">
+                <i data-lucide="shield" class="w-4 h-4"></i> 논리적 반박
+            </button>
         </div>
-      </nav>
+    </nav>
 
-      {/* Main Content */}
-      <main className="max-w-6xl mx-auto p-6 md:p-10">
-        {activeTab === 'intro' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              <div>
-                <h2 className="text-2xl font-bold text-indigo-900 mb-4">{contents.intro.title}</h2>
-                <p className="text-slate-600 mb-6 leading-relaxed">{contents.intro.subtitle}</p>
-                <div className="space-y-3">
-                  {contents.intro.objectives.map((obj, i) => (
-                    <div key={i} className="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                      <CheckCircle2 className="text-indigo-500 shrink-0 mt-0.5" size={18} />
-                      <span className="text-sm font-medium">{obj}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-indigo-900 rounded-xl p-8 text-white relative overflow-hidden group">
-                <Globe className="absolute -right-10 -bottom-10 opacity-10 group-hover:rotate-12 transition-transform duration-700" size={240} />
-                <h3 className="text-xl font-bold mb-4 relative z-10">핵심 전략</h3>
-                <p className="text-indigo-100 italic leading-relaxed relative z-10 text-lg">
-                  "{contents.intro.strategy}"
-                </p>
-                <div className="mt-8 pt-6 border-t border-indigo-700 relative z-10">
-                  <span className="text-xs uppercase tracking-widest text-indigo-300">Target Outcome</span>
-                  <p className="font-bold text-xl mt-1">논리적 방어자(Logical Defender)</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'names' && (
-          <div className="space-y-6 animate-in fade-in duration-500">
-            <h2 className="text-xl font-bold border-l-4 border-indigo-600 pl-3">명칭의 변천사: 기록의 연속성</h2>
-            <div className="grid gap-6">
-              {contents.names.map((item, i) => (
-                <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 transition-colors">
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">{item.category}</span>
-                  </div>
-                  <h3 className="text-lg font-bold mb-2 text-slate-800">{item.names}</h3>
-                  <p className="text-slate-600 text-sm mb-4 leading-relaxed">{item.insight}</p>
-                  <div className="text-xs text-indigo-500 font-bold flex items-center gap-1">
-                    <Info size={14} /> 행정적 관심의 대상임을 입증하는 결정적 증거
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'korea' && (
-          <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="flex justify-between items-end">
-              <h2 className="text-xl font-bold border-l-4 border-indigo-600 pl-3">한국 사료 분석: 영유권의 정당성</h2>
-              <span className="text-xs text-slate-400 italic">사료를 클릭하여 효과를 확인하세요</span>
-            </div>
-            <div className="grid md:grid-cols-3 gap-4">
-              {contents.korea.map((item, i) => (
-                <div 
-                  key={i} 
-                  onClick={() => setSelectedSource(i)}
-                  className={`cursor-pointer p-6 rounded-xl border-2 transition-all h-full flex flex-col justify-between ${
-                    selectedSource === i ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-200 hover:border-indigo-200'
-                  }`}
-                >
-                  <div>
-                    <h3 className={`font-bold mb-3 ${selectedSource === i ? 'text-white' : 'text-slate-800'}`}>{item.title}</h3>
-                    <p className={`text-sm leading-relaxed ${selectedSource === i ? 'text-indigo-50' : 'text-slate-600'}`}>"{item.detail}"</p>
-                  </div>
-                  {selectedSource === i && (
-                    <div className="mt-4 pt-4 border-t border-indigo-400 animate-in fade-in slide-in-from-top-1">
-                      <span className="text-[10px] uppercase font-bold text-indigo-200">Legal Effect</span>
-                      <p className="text-xs font-bold">{item.effect}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="bg-indigo-900 text-white p-6 rounded-xl shadow-lg mt-8">
-              <h4 className="font-bold flex items-center gap-2 mb-2 text-yellow-400">
-                <Shield size={18} /> So What? Insight
-              </h4>
-              <p className="text-sm leading-relaxed">
-                1900년 대한제국 칙령 제41호는 독도를 행정 관할권 아래 둔 '유주지'임을 확정한 국제법적 주권 행사입니다. 
-                이는 일본이 주장하는 1905년 <strong>'무주지 선점론'을 뿌리째 흔드는 결정적 근거</strong>가 됩니다.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'japan' && (
-          <div className="space-y-6 animate-in fade-in duration-500">
-            <h2 className="text-xl font-bold border-l-4 border-indigo-600 pl-3">일본 사료 탐구: 스스로 자인한 진실</h2>
-            <div className="space-y-4">
-              {contents.japan.map((item, i) => (
-                <div key={i} className="bg-white flex flex-col md:flex-row rounded-xl border border-slate-200 overflow-hidden group">
-                  <div className="md:w-1/3 bg-slate-100 p-6 flex flex-col justify-center border-r border-slate-200">
-                    <h3 className="font-bold text-slate-800">{item.title}</h3>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Japanese Record</span>
-                  </div>
-                  <div className="md:w-2/3 p-6 flex flex-col justify-center bg-white group-hover:bg-slate-50 transition-colors">
-                    <p className="text-sm text-slate-700 italic mb-3">"{item.detail}"</p>
-                    <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm">
-                      <ChevronRight size={16} /> {item.insight}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'maps' && (
-          <div className="animate-in fade-in duration-500">
-            <h2 className="text-xl font-bold border-l-4 border-indigo-600 pl-3 mb-6">고지도 분석: 시각적 증거</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <div className="h-48 bg-slate-100 rounded-lg mb-4 flex items-center justify-center border border-dashed border-slate-300">
-                  <MapIcon size={48} className="text-slate-300" />
-                  <span className="absolute text-xs text-slate-400 font-bold">[동국지도] 이미지 플레이스홀더</span>
-                </div>
-                <h3 className="font-bold text-slate-800 mb-2">한국: 동국지도 (정상기)</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  울릉도 옆에 독도를 정확한 위치에 표기하여 확고한 영토 의식을 반영했습니다.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                <div className="h-48 bg-slate-100 rounded-lg mb-4 flex items-center justify-center border border-dashed border-slate-300">
-                  <MapIcon size={48} className="text-slate-300" />
-                  <span className="absolute text-xs text-slate-400 font-bold">[삼국통람도설] 이미지 플레이스홀더</span>
-                </div>
-                <h3 className="font-bold text-slate-800 mb-2">일본: 삼국통람도설 (삼국총도)</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  독도와 울릉도를 조선과 동일한 색(황색)으로 채색하고 <span className="font-bold text-indigo-600">"조선의 것(朝鮮ノ持니)"</span>이라 명기했습니다.
-                </p>
-              </div>
-            </div>
-            <div className="mt-8 bg-amber-50 border border-amber-200 p-6 rounded-xl">
-              <h4 className="font-bold text-amber-800 flex items-center gap-2 mb-2">
-                <AlertTriangle size={18} /> 일본 측 지도의 모순
-              </h4>
-              <p className="text-sm text-amber-700">
-                일본이 영유권 근거로 제시하는 일부 지도들은 지리적 오류가 심각하여 사료로서의 신뢰성을 스스로 무너뜨리고 있습니다.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'logic' && (
-          <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-slate-800">역사적 진실: 논리적 방어벽 구축</h2>
-              <p className="text-slate-500 mt-2">상대방의 억지 주장을 차단하는 강력한 근거들</p>
-            </div>
-            
-            {/* Logic Tab specific Quick Links */}
-            <div className="flex justify-center gap-4 mb-10">
-              <a 
-                href="./01/index.html" 
-                className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-bold transition-all shadow-md active:scale-95"
-              >
-                <Calendar size={20} />
-                독도연표 보러가기
-              </a>
-              <a 
-                href="./02/02.html" 
-                className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-full font-bold transition-all shadow-md active:scale-95"
-              >
-                <MessageSquare size={20} />
-                독도용어 사전
-              </a>
-            </div>
-            
-            <div className="grid gap-6">
-              {contents.logic.map((item, i) => (
-                <div key={i} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-md hover:shadow-lg transition-shadow">
-                  <div className="flex items-start gap-4">
-                    <div className="shrink-0 p-3 bg-slate-100 rounded-full">
-                      {item.icon}
-                    </div>
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto p-6 md:p-10">
+        
+        <!-- Tab: Intro -->
+        <section id="content-intro" class="tab-content active">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                <div class="grid md:grid-cols-2 gap-10 items-center">
                     <div>
-                      <h3 className="text-lg font-bold text-slate-800 mb-3 italic">"Q: {item.q}"</h3>
-                      <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4">
-                        <p className="text-indigo-900 font-semibold leading-relaxed">A: {item.a}</p>
-                      </div>
+                        <h2 class="text-2xl font-bold text-indigo-900 mb-4">독도 역사 교육 프로그램</h2>
+                        <p class="text-slate-600 mb-6 leading-relaxed">객관적 사료와 국제법적 근거를 바탕으로 하는 논리적 주권 내면화</p>
+                        <div class="space-y-3" id="intro-objectives">
+                            <!-- Objectives injected here -->
+                        </div>
                     </div>
-                  </div>
+                    <div class="bg-indigo-900 rounded-xl p-8 text-white relative overflow-hidden group">
+                        <i data-lucide="globe" class="absolute -right-10 -bottom-10 opacity-10 group-hover:rotate-12 transition-transform duration-700 w-60 h-60"></i>
+                        <h3 class="text-xl font-bold mb-4 relative z-10">핵심 전략</h3>
+                        <p id="intro-strategy" class="text-indigo-100 italic leading-relaxed relative z-10 text-lg"></p>
+                        <div class="mt-8 pt-6 border-t border-indigo-700 relative z-10">
+                            <span class="text-xs uppercase tracking-widest text-indigo-300">Target Outcome</span>
+                            <p class="font-bold text-xl mt-1">논리적 방어자(Logical Defender)</p>
+                        </div>
+                    </div>
                 </div>
-              ))}
             </div>
+        </section>
 
-            <div className="bg-indigo-900 rounded-2xl p-10 text-white text-center shadow-2xl relative overflow-hidden">
-               <div className="relative z-10">
-                <h3 className="text-2xl font-bold mb-4">논리와 평화의 조화</h3>
-                <p className="text-indigo-100 max-w-2xl mx-auto leading-relaxed mb-6">
-                  독도 문제는 단순한 영토 분쟁을 넘어 인류 보편의 정의와 평화적 가치를 실현하는 과정입니다. 
-                  냉철한 논리와 단단한 사료로 우리의 땅 독도를 지켜나갑시다.
+        <!-- Tab: Names -->
+        <section id="content-names" class="tab-content">
+            <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3 mb-6">명칭의 변천사: 기록의 연속성</h2>
+            <div class="grid gap-6" id="names-list">
+                <!-- Names list injected here -->
+            </div>
+        </section>
+
+        <!-- Tab: Korea -->
+        <section id="content-korea" class="tab-content">
+            <div class="flex justify-between items-end mb-6">
+                <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3">한국 사료 분석: 영유권의 정당성</h2>
+                <span class="text-xs text-slate-400 italic">사료를 클릭하여 효과를 확인하세요</span>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4" id="korea-list">
+                <!-- Korea list injected here -->
+            </div>
+            <div class="bg-indigo-900 text-white p-6 rounded-xl shadow-lg mt-8">
+                <h4 class="font-bold flex items-center gap-2 mb-2 text-yellow-400">
+                    <i data-lucide="shield" class="w-5 h-5"></i> So What? Insight
+                </h4>
+                <p class="text-sm leading-relaxed">
+                    1900년 대한제국 칙령 제41호는 독도를 행정 관할권 아래 둔 '유주지'임을 확정한 국제법적 주권 행사입니다. 
+                    이는 일본이 주장하는 1905년 <strong>'무주지 선점론'을 뿌리째 흔드는 결정적 근거</strong>가 됩니다.
                 </p>
-                <button 
-                  onClick={() => setActiveTab('intro')}
-                  className="bg-white text-indigo-900 px-8 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors"
-                >
-                  탐구 완료: 교육 개요로 돌아가기
-                </button>
-              </div>
             </div>
-          </div>
-        )}
-      </main>
+        </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-10 mt-10">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-slate-400 text-xs font-medium uppercase tracking-widest mb-4">Educational Resource Prototype</p>
-          <p className="text-slate-500 text-sm italic">"본 기획안을 통한 교육은 학생들이 사료라는 단단한 토대 위에 논리적 주권 의식을 세우는 기틀이 될 것입니다."</p>
+        <!-- Tab: Japan -->
+        <section id="content-japan" class="tab-content">
+            <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3 mb-6">일본 사료 탐구: 스스로 자인한 진실</h2>
+            <div class="space-y-4" id="japan-list">
+                <!-- Japan list injected here -->
+            </div>
+        </section>
+
+        <!-- Tab: Maps -->
+        <section id="content-maps" class="tab-content">
+            <h2 class="text-xl font-bold border-l-4 border-indigo-600 pl-3 mb-6">고지도 분석: 시각적 증거</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="h-48 bg-slate-100 rounded-lg mb-4 flex items-center justify-center border border-dashed border-slate-300">
+                        <i data-lucide="map" class="text-slate-300 w-12 h-12"></i>
+                        <span class="absolute text-xs text-slate-400 font-bold">[동국지도 이미지]</span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-2">한국: 동국지도 (정상기)</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        울릉도 옆에 독도를 정확한 위치에 표기하여 확고한 영토 의식을 반영했습니다.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="h-48 bg-slate-100 rounded-lg mb-4 flex items-center justify-center border border-dashed border-slate-300">
+                        <i data-lucide="map" class="text-slate-300 w-12 h-12"></i>
+                        <span class="absolute text-xs text-slate-400 font-bold">[삼국통람도설 이미지]</span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-2">일본: 삼국통람도설 (삼국총도)</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        독도와 울릉도를 조선과 동일한 색(황색)으로 채색하고 <span class="font-bold text-indigo-600">"조선의 것"</span>이라 명기했습니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab: Logic -->
+        <section id="content-logic" class="tab-content">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">역사적 진실: 논리적 방어벽 구축</h2>
+                <p class="text-slate-500 mt-2">상대방의 억지 주장을 차단하는 강력한 근거들</p>
+            </div>
+            
+            <div class="flex justify-center gap-4 mb-10">
+                <a href="./01/index.html" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-bold transition-all shadow-md active:scale-95">
+                    <i data-lucide="calendar" class="w-5 h-5"></i> 독도연표 보러가기
+                </a>
+                <a href="./02/02.html" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-full font-bold transition-all shadow-md active:scale-95">
+                    <i data-lucide="message-square" class="w-5 h-5"></i> 독도용어 사전
+                </a>
+            </div>
+            
+            <div class="grid gap-6" id="logic-list">
+                <!-- Logic items injected here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-10 mt-10">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-slate-400 text-xs font-medium uppercase tracking-widest mb-4">Educational Resource Prototype (Vanilla JS)</p>
+            <p class="text-slate-500 text-sm italic">"본 기획안을 통한 교육은 학생들이 사료라는 단단한 토대 위에 논리적 주권 의식을 세우는 기틀이 될 것입니다."</p>
         </div>
-      </footer>
-    </div>
-  );
-};
+    </footer>
 
-export default function App() {
-  return <DokdoEduApp />;
-}
+    <script>
+        // --- Data ---
+        const data = {
+            intro: {
+                objectives: [
+                    "학습자 스스로 일본 측 주장의 모순 발견",
+                    "우리 영토 주권의 논리적 파급력 체득",
+                    "역사적·지리적·국제법적 '논리적 방어자' 역량 강화"
+                ],
+                strategy: "감성적 호소를 넘어 '팩트'로 압도하는 고도화된 역사 교수 전략"
+            },
+            names: [
+                { category: "한국 사료", names: "우산도, 자산도, 간산도, 천산도, 가지도, 석도, 독도", insight: "필사 과정의 표기 오류는 역설적으로 국가 행정 체계 내에서 지속적으로 관리되었음을 증명함." },
+                { category: "일본 사료", names: "송도(松島), 죽도(竹島), 량고도", insight: "17세기 송도로 인식하다가 1905년 시마네현 편입 시 '죽도'로 공식 채택함 (울릉도와 혼동)." },
+                { category: "서양 기록", names: "리앙쿠르, 올리부차, 다즐레, 아르고노트", insight: "다즐레(울릉도)와 아르고노트의 혼동은 당시 서양 지리 인식의 한계를 보여줌." }
+            ],
+            korea: [
+                { title: "세종실록지리지 (1454)", detail: "우산(독도)과 무릉(울릉도) 두 섬이 날씨가 맑으면 서로 바라볼 수 있다.", effect: "지리적 인지 및 행정 구역(울진현) 포함 증명" },
+                { title: "만기요람 (1808)", detail: "우산은 왜인들이 말하는 송도(Matsushima)다.", effect: "일본 측 명칭과의 대응 관계를 국가 차원에서 파악" },
+                { title: "대한제국 칙령 제41호 (1900)", detail: "울도군의 관할 구역을 '울릉전도와 죽도, 석도'로 확정.", effect: "국제법적으로 완결된 주권 행사 행위 (관보 게재)" }
+            ],
+            japan: [
+                { title: "은주시청합기 (1667)", detail: "일본의 서북쪽 경계를 오키섬으로 한정.", insight: "독도와 울릉도는 조선의 땅임을 스스로 자인" },
+                { title: "조선국 교제시말 내탐서 (1870)", detail: "외무성 관료들이 독도/울릉도가 조선 영토가 된 경위 보고.", insight: "메이지 정부 초기에도 조선 영토로 인식" },
+                { title: "태정관 지령 (1877)", detail: "본방(일본)은 관계가 없다는 것을 명심할 것.", insight: "일본 최고 국가기관의 공식적인 독도 영유권 부인" }
+            ],
+            logic: [
+                { q: "1905년 시마네현 고시는 유효한가?", a: "원천 무효. 1900년 칙령 제41호에 의해 이미 독도는 '유주지'였으므로 무주지 선점론은 성립 불가.", icon: "alert-triangle", color: "text-red-500" },
+                { q: "대한제국은 왜 즉각 항의하지 못했나?", a: "1905년 을사늑약으로 외교권이 박탈된 상태였기 때문. 그럼에도 내부적으로 지령 제3호를 통해 일본 주장을 엄중 선언함.", icon: "info", color: "text-blue-500" }
+            ]
+        };
+
+        // --- Tab Logic ---
+        const buttons = document.querySelectorAll('.nav-btn');
+        const contents = document.querySelectorAll('.tab-content');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.tab;
+                
+                // Update buttons
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update content
+                contents.forEach(c => {
+                    c.classList.remove('active');
+                    if (c.id === `content-${target}`) c.classList.add('active');
+                });
+            });
+        });
+
+        // --- Render Functions ---
+        function init() {
+            // Render Intro
+            document.getElementById('intro-strategy').textContent = `"${data.intro.strategy}"`;
+            document.getElementById('intro-objectives').innerHTML = data.intro.objectives.map(obj => `
+                <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                    <i data-lucide="check-circle-2" class="text-indigo-500 shrink-0 mt-0.5 w-4.5 h-4.5"></i>
+                    <span class="text-sm font-medium">${obj}</span>
+                </div>
+            `).join('');
+
+            // Render Names
+            document.getElementById('names-list').innerHTML = data.names.map(item => `
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">${item.category}</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 text-slate-800">${item.names}</h3>
+                    <p class="text-slate-600 text-sm mb-4 leading-relaxed">${item.insight}</p>
+                    <div class="text-xs text-indigo-500 font-bold flex items-center gap-1">
+                        <i data-lucide="info" class="w-3.5 h-3.5"></i> 행정적 관심의 대상임을 입증하는 결정적 증거
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Korea (Interactive)
+            document.getElementById('korea-list').innerHTML = data.korea.map((item, idx) => `
+                <div class="korea-card cursor-pointer p-6 rounded-xl border-2 transition-all h-full flex flex-col justify-between bg-white border-slate-200 hover:border-indigo-200" data-idx="${idx}">
+                    <div>
+                        <h3 class="font-bold mb-3 title-text text-slate-800">${item.title}</h3>
+                        <p class="text-sm leading-relaxed detail-text text-slate-600">"${item.detail}"</p>
+                    </div>
+                    <div class="effect-box hidden mt-4 pt-4 border-t border-indigo-400">
+                        <span class="text-[10px] uppercase font-bold opacity-80">Legal Effect</span>
+                        <p class="text-xs font-bold">${item.effect}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add Click Event for Korea Cards
+            document.querySelectorAll('.korea-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.korea-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                });
+            });
+
+            // Render Japan
+            document.getElementById('japan-list').innerHTML = data.japan.map(item => `
+                <div class="bg-white flex flex-col md:flex-row rounded-xl border border-slate-200 overflow-hidden group">
+                    <div class="md:w-1/3 bg-slate-100 p-6 flex flex-col justify-center border-r border-slate-200">
+                        <h3 class="font-bold text-slate-800">${item.title}</h3>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Japanese Record</span>
+                    </div>
+                    <div class="md:w-2/3 p-6 flex flex-col justify-center bg-white group-hover:bg-slate-50 transition-colors">
+                        <p class="text-sm text-slate-700 italic mb-3">"${item.detail}"</p>
+                        <div class="flex items-center gap-2 text-indigo-600 font-bold text-sm">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i> ${item.insight}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Logic
+            document.getElementById('logic-list').innerHTML = data.logic.map(item => `
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex items-start gap-4">
+                        <div class="shrink-0 p-3 bg-slate-100 rounded-full">
+                            <i data-lucide="${item.icon}" class="${item.color} w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-3 italic">"Q: ${item.q}"</h3>
+                            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4">
+                                <p class="text-indigo-900 font-semibold leading-relaxed">A: ${item.a}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Final: Replace all Lucide icons
+            lucide.createIcons();
+        }
+
+        // Run init on load
+        window.onload = init;
+    </script>
+</body>
+</html>
